@@ -1,0 +1,23 @@
+{
+  "name": "dharvin",
+  "version": "1.0.0",
+  "description": "CycleCare Full-Stack Application",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently -k -p \"[{name}]\" -n \"BACKEND,FRONTEND\" -c \"magenta.bold,cyan.bold\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "start": "concurrently -k -p \"[{name}]\" -n \"BACKEND,FRONTEND\" -c \"magenta.bold,cyan.bold\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "npm --prefix cyclecare-frontend run dev",
+    "dev:backend": "npm --prefix cyclecare-backend run dev",
+    "seed": "npm --prefix cyclecare-backend run seed"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
