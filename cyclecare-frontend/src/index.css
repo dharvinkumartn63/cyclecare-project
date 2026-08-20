@@ -47,12 +47,12 @@ html { scroll-behavior: smooth; }
 body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
-  background-color: #fff8fa;
-  color: #1f2937;
+  background-color: #fff5f8;
+  color: #0f172a;
   transition: background-color 0.3s, color 0.3s;
 }
 
-.dark body, body.dark { background-color: #030712; color: #f3f4f6; }
+.dark body, body.dark { background-color: #030712; color: #f8fafc; }
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
@@ -88,8 +88,8 @@ body {
 .btn-outline {
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
   padding: 0.625rem 1.25rem;
-  border: 2px solid var(--color-primary-400); color: var(--color-primary-600);
-  background: transparent; font-weight: 600; border-radius: 0.75rem;
+  border: 2px solid var(--color-primary-500); color: var(--color-primary-600);
+  background: white; font-weight: 600; border-radius: 0.75rem;
   transition: all 0.2s; cursor: pointer;
 }
 .btn-outline:hover { background: #fff0f4; }
@@ -99,10 +99,10 @@ body {
 .btn-ghost {
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
   padding: 0.5rem 1rem;
-  color: #4b5563; background: transparent; font-weight: 500; border-radius: 0.75rem;
+  color: #334155; background: transparent; font-weight: 600; border-radius: 0.75rem;
   border: none; transition: all 0.2s; cursor: pointer;
 }
-.btn-ghost:hover { background: #f3f4f6; }
+.btn-ghost:hover { background: #ffe0eb; color: #d11559; }
 
 .btn-danger {
   display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
@@ -116,84 +116,84 @@ body {
 .btn-danger:disabled { opacity: 0.6; cursor: not-allowed; }
 
 .card {
-  background: white; border-radius: 1rem;
-  box-shadow: 0 2px 20px 0 rgba(232,40,106,0.07);
-  border: 1px solid #f3f4f6; padding: 1.5rem;
-  transition: all 0.2s;
+  background: #ffffff; border-radius: 1rem;
+  box-shadow: 0 4px 20px 0 rgba(232,40,106,0.08);
+  border: 1px solid #f1f5f9; padding: 1.5rem;
+  transition: all 0.2s; color: #0f172a;
 }
 
 .card-hover {
-  background: white; border-radius: 1rem;
-  box-shadow: 0 2px 20px 0 rgba(232,40,106,0.07);
-  border: 1px solid #f3f4f6; padding: 1.5rem;
-  transition: all 0.2s; cursor: pointer;
+  background: #ffffff; border-radius: 1rem;
+  box-shadow: 0 4px 20px 0 rgba(232,40,106,0.08);
+  border: 1px solid #f1f5f9; padding: 1.5rem;
+  transition: all 0.2s; cursor: pointer; color: #0f172a;
 }
-.card-hover:hover { box-shadow: 0 8px 30px rgba(232,40,106,0.12); transform: translateY(-2px); }
+.card-hover:hover { box-shadow: 0 8px 30px rgba(232,40,106,0.14); transform: translateY(-2px); }
 
 .input-field {
   width: 100%; padding: 0.75rem 1rem;
-  border-radius: 0.75rem; border: 1px solid #e5e7eb;
-  background: white; color: #1f2937;
-  font-family: var(--font-sans); font-size: 0.875rem;
+  border-radius: 0.75rem; border: 1.5px solid #cbd5e1;
+  background: #ffffff; color: #0f172a;
+  font-family: var(--font-sans); font-size: 0.875rem; font-weight: 500;
   transition: all 0.2s;
 }
-.input-field:focus { outline: none; border-color: transparent; box-shadow: 0 0 0 2px var(--color-primary-400); }
-.input-field::placeholder { color: #9ca3af; }
+.input-field:focus { outline: none; border-color: var(--color-primary-500); box-shadow: 0 0 0 3px rgba(232,40,106,0.2); }
+.input-field::placeholder { color: #64748b; font-weight: 400; }
 
 .label {
-  display: block; font-size: 0.875rem; font-weight: 500;
-  color: #374151; margin-bottom: 0.375rem;
+  display: block; font-size: 0.875rem; font-weight: 600;
+  color: #1e293b; margin-bottom: 0.375rem;
 }
 
-.badge { display: inline-flex; align-items: center; padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 600; }
-.badge-primary { background: #ffe0eb; color: #d11559; }
-.badge-secondary { background: #ede9fe; color: #7c3aed; }
+.badge { display: inline-flex; align-items: center; padding: 0.25rem 0.625rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 700; }
+.badge-primary { background: #ffe0eb; color: #b00f4b; }
+.badge-secondary { background: #ede9fe; color: #6d28d9; }
 .badge-success { background: #d1fae5; color: #047857; }
 .badge-warning { background: #fef3c7; color: #92400e; }
 
-.page-title { font-size: 1.5rem; font-weight: 700; color: #111827; }
-.section-title { font-size: 1.125rem; font-weight: 600; color: #1f2937; }
-.text-muted { font-size: 0.875rem; color: #6b7280; }
-.divider { border-top: 1px solid #f3f4f6; }
+.page-title { font-size: 1.625rem; font-weight: 800; color: #0f172a; }
+.section-title { font-size: 1.125rem; font-weight: 700; color: #1e293b; }
+.text-muted { font-size: 0.875rem; color: #475569; font-weight: 500; }
+.divider { border-top: 1px solid #e2e8f0; }
 
 .sidebar-link {
   display: flex; align-items: center; gap: 0.75rem;
   padding: 0.75rem 1rem; border-radius: 0.75rem;
-  font-weight: 500; color: #4b5563; text-decoration: none;
+  font-weight: 600; color: #334155; text-decoration: none;
   transition: all 0.2s; border: none; background: none; cursor: pointer;
   width: 100%; text-align: left;
 }
 .sidebar-link:hover { background: #fff0f4; color: #d11559; }
-.sidebar-link.active { background: #ffe0eb; color: #d11559; font-weight: 600; }
+.sidebar-link.active { background: #ffe0eb; color: #b00f4b; font-weight: 700; }
 
 .glass-card {
   backdrop-filter: blur(12px);
-  background: rgba(255,255,255,0.7);
-  border: 1px solid rgba(255,255,255,0.4);
-  border-radius: 1rem; box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(232,40,106,0.15);
+  border-radius: 1rem; box-shadow: 0 8px 32px rgba(0,0,0,0.08);
 }
 
 /* Dark mode overrides */
-.dark .card, .dark .card-hover { background: #111827; border-color: #1f2937; box-shadow: 0 2px 20px rgba(0,0,0,0.3); }
+.dark .card, .dark .card-hover { background: #0f172a; border-color: #1e293b; color: #f8fafc; box-shadow: 0 2px 20px rgba(0,0,0,0.3); }
 .dark .card-hover:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.4); }
-.dark .input-field { background: #1f2937; border-color: #374151; color: #f3f4f6; }
-.dark .input-field::placeholder { color: #6b7280; }
-.dark .label { color: #d1d5db; }
-.dark .page-title { color: white; }
-.dark .section-title { color: #f3f4f6; }
-.dark .text-muted { color: #9ca3af; }
-.dark .divider { border-color: #1f2937; }
-.dark .btn-ghost { color: #9ca3af; }
-.dark .btn-ghost:hover { background: #1f2937; }
-.dark .sidebar-link { color: #9ca3af; }
-.dark .sidebar-link:hover { background: rgba(232,40,106,0.1); color: #f472b6; }
-.dark .sidebar-link.active { background: rgba(232,40,106,0.15); color: #f472b6; }
-.dark .badge-primary { background: rgba(232,40,106,0.15); color: #f472b6; }
-.dark .badge-secondary { background: rgba(139,92,246,0.15); color: #c4b5fd; }
-.dark .badge-success { background: rgba(16,185,129,0.15); color: #34d399; }
-.dark .btn-outline { border-color: #f472b6; color: #f472b6; }
-.dark .btn-outline:hover { background: rgba(232,40,106,0.1); }
-.dark body { background-color: #030712; color: #f3f4f6; }
+.dark .input-field { background: #1e293b; border-color: #334155; color: #f8fafc; }
+.dark .input-field::placeholder { color: #94a3b8; }
+.dark .label { color: #f1f5f9; }
+.dark .page-title { color: #ffffff; }
+.dark .section-title { color: #f8fafc; }
+.dark .text-muted { color: #cbd5e1; }
+.dark .divider { border-color: #1e293b; }
+.dark .btn-ghost { color: #cbd5e1; }
+.dark .btn-ghost:hover { background: #1e293b; color: #f472b6; }
+.dark .sidebar-link { color: #cbd5e1; }
+.dark .sidebar-link:hover { background: rgba(232,40,106,0.15); color: #f472b6; }
+.dark .sidebar-link.active { background: rgba(232,40,106,0.25); color: #f472b6; font-weight: 700; }
+.dark .badge-primary { background: rgba(232,40,106,0.2); color: #f472b6; }
+.dark .badge-secondary { background: rgba(139,92,246,0.2); color: #c4b5fd; }
+.dark .badge-success { background: rgba(16,185,129,0.2); color: #34d399; }
+.dark .btn-outline { border-color: #f472b6; color: #f472b6; background: transparent; }
+.dark .btn-outline:hover { background: rgba(232,40,106,0.15); }
+.dark body { background-color: #030712; color: #f8fafc; }
 
 /* Animations */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }

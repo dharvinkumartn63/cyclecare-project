@@ -41,4 +41,24 @@ export const userApi = {
   updateNotifications: async (data) => {
     return userApi.updateProfile({ notificationPreferences: data });
   },
+
+  submitFeedback: async (data) => {
+    const recipient = 'dharvin558@gmail.com';
+    const subject = 'carecycle issue';
+    const body = `Issue Category: ${data.issueType || 'General Issue'}\nFrom User Email: ${data.email || 'N/A'}\n\nIssue Details:\n${data.message}`;
+
+    // Trigger direct mail client to dharvin558@gmail.com with subject "carecycle issue"
+    const mailtoUrl = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    try {
+      window.open(mailtoUrl, '_blank');
+    } catch (_) {}
+
+    return {
+      data: {
+        success: true,
+        message: 'Feedback report created.',
+        data: { recipient, subject, mailtoUrl }
+      }
+    };
+  },
 };

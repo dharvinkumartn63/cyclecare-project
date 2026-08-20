@@ -221,8 +221,8 @@ const ProfilePage = () => {
                     <Icon className="w-4 h-4 text-primary-500" />
                   </div>
                   <div>
-                    <p className="text-xs text-gray-400">{label}</p>
-                    <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">{value}</p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">{label}</p>
+                    <p className="text-sm font-bold text-gray-900 dark:text-gray-100">{value}</p>
                   </div>
                 </div>
               ))}
@@ -240,10 +240,10 @@ const ProfilePage = () => {
               <Shield className="w-5 h-5" />
             </div>
             <div>
-              <p className="text-sm font-semibold text-gray-800 dark:text-gray-100 group-hover:text-secondary-600 dark:group-hover:text-secondary-400 transition-colors">
+              <p className="text-sm font-bold text-gray-900 dark:text-gray-100 group-hover:text-secondary-600 dark:group-hover:text-secondary-400 transition-colors">
                 Change Password
               </p>
-              <p className="text-xs text-gray-400">Click to change your account password</p>
+              <p className="text-xs text-gray-600 dark:text-gray-400">Click to change your account password</p>
             </div>
           </div>
           <div className="flex items-center gap-1 text-xs font-semibold text-secondary-500 group-hover:translate-x-1 transition-transform">

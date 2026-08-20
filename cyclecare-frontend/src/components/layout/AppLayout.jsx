@@ -1,12 +1,13 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   LayoutDashboard, CalendarHeart, TrendingUp, History,
-  Droplets, User, Settings, LogOut, Moon, Sun, Menu, X
+  Droplets, User, Settings, LogOut, Moon, Sun, Menu, X, MessageSquare
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { getInitials } from '../../utils/dateUtils';
+import FeedbackModal from '../ui/FeedbackModal';
 import toast from 'react-hot-toast';
 
 const navItems = [
@@ -28,7 +29,7 @@ const NavItem = ({ to, icon: Icon, label }) => (
   </NavLink>
 );
 
-export const Sidebar = () => {
+export const Sidebar = ({ onOpenFeedback }) => {
   const { user, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -45,8 +46,8 @@ export const Sidebar = () => {
       <div className="flex items-center gap-3 px-2 mb-2">
         <img src="/women.png" alt="CycleCare" className="w-9 h-9 object-contain" />
         <div>
-          <h1 className="font-bold text-lg text-primary-600 dark:text-primary-400 leading-tight">CycleCare</h1>
-          <p className="text-xs text-gray-400">Wellness Tracker</p>
+          <h1 className="font-extrabold text-lg text-primary-600 dark:text-primary-400 leading-tight">CycleCare</h1>
+          <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">Wellness Tracker</p>
         </div>
       </div>
 
@@ -57,6 +58,12 @@ export const Sidebar = () => {
 
       {/* Bottom actions */}
       <div className="flex flex-col gap-1 border-t border-gray-100 dark:border-gray-800 pt-4">
+        <button
+          onClick={onOpenFeedback}
+          className="sidebar-link w-full text-left text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-primary-900/20"
+        >
+          <MessageSquare className="w-5 h-5" /><span>Report Issue / Feedback</span>
+        </button>
         <NavLink to="/settings" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
           <Settings className="w-5 h-5" /><span>Settings</span>
         </NavLink>
@@ -86,15 +93,15 @@ export const Sidebar = () => {
           </div>
         )}
         <div className="overflow-hidden">
-          <p className="text-sm font-semibold text-gray-800 dark:text-gray-100 truncate">{user?.name}</p>
-          <p className="text-xs text-gray-400 truncate">@{user?.userId}</p>
+          <p className="text-sm font-bold text-gray-900 dark:text-gray-100 truncate">{user?.name}</p>
+          <p className="text-xs text-gray-500 dark:text-gray-400 truncate">@{user?.userId}</p>
         </div>
       </div>
     </aside>
   );
 };
 
-export const MobileNav = () => {
+export const MobileNav = ({ onOpenFeedback }) => {
   const { user, logout } = useAuth();
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -115,10 +122,10 @@ export const MobileNav = () => {
           <span className="font-bold text-primary-600 dark:text-primary-400">CycleCare</span>
         </div>
         <div className="flex items-center gap-2">
-          <button onClick={toggleTheme} className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Toggle theme">
+          <button onClick={toggleTheme} className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Toggle theme">
             {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
-          <button onClick={() => setMenuOpen(true)} className="p-2 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Open menu">
+          <button onClick={() => setMenuOpen(true)} className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800" aria-label="Open menu">
             <Menu className="w-5 h-5" />
           </button>
         </div>
@@ -131,11 +138,11 @@ export const MobileNav = () => {
             key={to}
             to={to}
             className={({ isActive }) =>
-              `flex flex-col items-center gap-0.5 p-2 rounded-xl transition-colors ${isActive ? 'text-primary-600 dark:text-primary-400' : 'text-gray-400'}`
+              `flex flex-col items-center gap-0.5 p-2 rounded-xl transition-colors ${isActive ? 'text-primary-600 dark:text-primary-400 font-bold' : 'text-gray-500 dark:text-gray-400'}`
             }
           >
             <Icon className="w-5 h-5" />
-            <span className="text-[10px] font-medium">{label}</span>
+            <span className="text-[10px] font-semibold">{label}</span>
           </NavLink>
         ))}
       </nav>
@@ -150,7 +157,7 @@ export const MobileNav = () => {
                 <img src="/women.png" alt="CycleCare" className="w-8 h-8 object-contain" />
                 <span className="font-bold text-primary-600 dark:text-primary-400">CycleCare</span>
               </div>
-              <button onClick={() => setMenuOpen(false)} className="p-1.5 rounded-lg text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800">
+              <button onClick={() => setMenuOpen(false)} className="p-1.5 rounded-lg text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -163,6 +170,9 @@ export const MobileNav = () => {
               ))}
             </nav>
             <div className="border-t border-gray-100 dark:border-gray-800 pt-3 flex flex-col gap-1">
+              <button onClick={() => { setMenuOpen(false); onOpenFeedback(); }} className="sidebar-link w-full text-left text-primary-600 dark:text-primary-400">
+                <MessageSquare className="w-5 h-5" /><span>Report Issue / Feedback</span>
+              </button>
               <NavLink to="/settings" onClick={() => setMenuOpen(false)} className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
                 <Settings className="w-5 h-5" /><span>Settings</span>
               </NavLink>
@@ -175,8 +185,8 @@ export const MobileNav = () => {
                 {getInitials(user?.name)}
               </div>
               <div className="overflow-hidden">
-                <p className="text-sm font-semibold text-gray-800 dark:text-gray-100 truncate">{user?.name}</p>
-                <p className="text-xs text-gray-400 truncate">@{user?.userId}</p>
+                <p className="text-sm font-bold text-gray-900 dark:text-gray-100 truncate">{user?.name}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">@{user?.userId}</p>
               </div>
             </div>
           </div>
@@ -186,16 +196,21 @@ export const MobileNav = () => {
   );
 };
 
-const AppLayout = ({ children }) => (
-  <div className="min-h-screen flex">
-    <Sidebar />
-    <MobileNav />
-    <main className="flex-1 lg:ml-64 pt-14 lg:pt-0 pb-16 lg:pb-0 min-h-screen">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 lg:py-8 animate-fade-in">
-        {children}
-      </div>
-    </main>
-  </div>
-);
+const AppLayout = ({ children }) => {
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+
+  return (
+    <div className="min-h-screen flex">
+      <Sidebar onOpenFeedback={() => setShowFeedbackModal(true)} />
+      <MobileNav onOpenFeedback={() => setShowFeedbackModal(true)} />
+      <main className="flex-1 lg:ml-64 pt-14 lg:pt-0 pb-16 lg:pb-0 min-h-screen">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 lg:py-8 animate-fade-in">
+          {children}
+        </div>
+      </main>
+      <FeedbackModal isOpen={showFeedbackModal} onClose={() => setShowFeedbackModal(false)} />
+    </div>
+  );
+};
 
 export default AppLayout;

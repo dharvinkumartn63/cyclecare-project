@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Bell, Droplets, CalendarHeart, RefreshCw, Shield, Moon, Sun } from 'lucide-react';
+import { Bell, Droplets, CalendarHeart, RefreshCw, Shield, Moon, Sun, MessageSquare, Mail } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { userApi } from '../api/userApi';
 import Button from '../components/ui/Button';
 import AppLayout from '../components/layout/AppLayout';
+import FeedbackModal from '../components/ui/FeedbackModal';
 import toast from 'react-hot-toast';
 
 const Toggle = ({ checked, onChange, disabled }) => (
@@ -35,6 +36,7 @@ const SettingsPage = () => {
   const { isDark, toggleTheme } = useTheme();
   const [notifPrefs, setNotifPrefs] = useState(user?.notificationPreferences || { periodReminder: false, hydrationReminder: false, cycleUpdateReminder: false });
   const [saving, setSaving] = useState(false);
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
 
   const toggleNotif = async (key) => {
     const newPrefs = { ...notifPrefs, [key]: !notifPrefs[key] };
@@ -59,15 +61,33 @@ const SettingsPage = () => {
       <div className="flex flex-col gap-6 max-w-2xl animate-slide-up">
         <div>
           <h1 className="page-title">Settings</h1>
-          <p className="text-muted">Manage your app preferences and account settings.</p>
+          <p className="text-muted">Manage your app preferences, account settings, and report feedback.</p>
+        </div>
+
+        {/* Support & Feedback Card */}
+        <div className="card bg-gradient-to-br from-primary-50 to-secondary-50 dark:from-primary-900/20 dark:to-secondary-900/20 border border-primary-200 dark:border-primary-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-primary-500 rounded-xl flex items-center justify-center text-white flex-shrink-0 shadow-md">
+              <MessageSquare className="w-5 h-5" />
+            </div>
+            <div>
+              <p className="font-bold text-gray-900 dark:text-white text-base">Report an Issue or Feedback</p>
+              <p className="text-xs text-gray-600 dark:text-gray-300">
+                Send issue reports directly to <span className="font-semibold text-primary-600 dark:text-primary-400">dharvin558@gmail.com</span> (Subject: <span className="font-semibold">carecycle issue</span>)
+              </p>
+            </div>
+          </div>
+          <Button onClick={() => setShowFeedbackModal(true)} size="sm" className="flex-shrink-0">
+            <Mail className="w-4 h-4" /> Send Feedback
+          </Button>
         </div>
 
         {/* Appearance */}
         <SettingsSection title="Appearance" icon={isDark ? Moon : Sun}>
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm font-medium text-gray-700 dark:text-gray-200">Dark Mode</p>
-              <p className="text-xs text-gray-400">Switch between light and dark theme.</p>
+              <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">Dark Mode</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Switch between light and dark theme.</p>
             </div>
             <Toggle checked={isDark} onChange={toggleTheme} />
           </div>
@@ -78,13 +98,13 @@ const SettingsPage = () => {
           {notifItems.map(({ key, label, desc }) => (
             <div key={key} className="flex items-center justify-between py-1">
               <div>
-                <p className="text-sm font-medium text-gray-700 dark:text-gray-200">{label}</p>
-                <p className="text-xs text-gray-400">{desc}</p>
+                <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">{label}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">{desc}</p>
               </div>
               <Toggle checked={notifPrefs[key]} onChange={() => toggleNotif(key)} disabled={saving} />
             </div>
           ))}
-          <p className="text-xs text-gray-400 italic mt-1">
+          <p className="text-xs text-gray-500 dark:text-gray-400 italic mt-1">
             Note: In-app notifications only. Push notifications require browser permission.
           </p>
         </SettingsSection>
@@ -92,9 +112,9 @@ const SettingsPage = () => {
         {/* Account info */}
         <SettingsSection title="Account" icon={Shield}>
           <div className="flex flex-col gap-2 text-sm">
-            <div className="flex justify-between"><span className="text-gray-400">Name</span><span className="font-medium text-gray-800 dark:text-gray-100">{user?.name}</span></div>
-            <div className="flex justify-between"><span className="text-gray-400">User ID</span><span className="font-medium text-gray-800 dark:text-gray-100">@{user?.userId}</span></div>
-            <div className="flex justify-between"><span className="text-gray-400">Email</span><span className="font-medium text-gray-800 dark:text-gray-100">{user?.email}</span></div>
+            <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Name</span><span className="font-semibold text-gray-900 dark:text-gray-100">{user?.name}</span></div>
+            <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">User ID</span><span className="font-semibold text-gray-900 dark:text-gray-100">@{user?.userId}</span></div>
+            <div className="flex justify-between"><span className="text-gray-500 dark:text-gray-400">Email</span><span className="font-semibold text-gray-900 dark:text-gray-100">{user?.email}</span></div>
           </div>
           <div className="mt-2">
             <Button variant="outline" size="sm" onClick={() => window.location.href = '/profile'}>
@@ -108,14 +128,17 @@ const SettingsPage = () => {
           <div className="flex items-start gap-3">
             <Shield className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
             <div>
-              <p className="text-sm font-semibold text-blue-700 dark:text-blue-400 mb-1">Privacy & Data</p>
-              <p className="text-xs text-blue-600 dark:text-blue-500">
+              <p className="text-sm font-semibold text-blue-800 dark:text-blue-400 mb-1">Privacy & Data</p>
+              <p className="text-xs text-blue-700 dark:text-blue-400">
                 Your cycle and wellness data is private and stored securely. Only you can access your records.
                 CycleCare does not share your personal health data with any third parties.
               </p>
             </div>
           </div>
         </div>
+
+        {/* Feedback Modal */}
+        <FeedbackModal isOpen={showFeedbackModal} onClose={() => setShowFeedbackModal(false)} />
       </div>
     </AppLayout>
   );
