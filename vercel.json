@@ -19,7 +19,12 @@
       "dest": "/api/index.js"
     },
     {
-      "handle": "filesystem"
+      "src": "/assets/(.*)",
+      "dest": "/cyclecare-frontend/assets/$1"
+    },
+    {
+      "src": "/women.png",
+      "dest": "/cyclecare-frontend/women.png"
     },
     {
       "src": "/(.*)",
