@@ -22,6 +22,8 @@ const HistoryPage = () => {
 
   if (loading) return <AppLayout><PageLoader text="Loading cycle history..." /></AppLayout>;
 
+  const safeCycles = Array.isArray(data?.cycles) ? [...data.cycles].reverse() : [];
+
   return (
     <AppLayout>
       <div className="flex flex-col gap-6 animate-slide-up">
@@ -37,7 +39,7 @@ const HistoryPage = () => {
             {/* Summary stats */}
             <div className="grid grid-cols-3 gap-4">
               <div className="card text-center">
-                <p className="text-3xl font-extrabold text-primary-600 dark:text-primary-400">{data.totalRecords}</p>
+                <p className="text-3xl font-extrabold text-primary-600 dark:text-primary-400">{data.totalRecords ?? 0}</p>
                 <p className="text-muted text-xs mt-1">Total Records</p>
               </div>
               <div className="card text-center">
@@ -76,8 +78,8 @@ const HistoryPage = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-                    {[...data.cycles].reverse().map((c) => (
-                      <tr key={c.index} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                    {safeCycles.map((c) => (
+                      <tr key={c.index || c._id || c.startDate} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                         <td className="px-5 py-3 font-bold text-gray-400">#{c.index}</td>
                         <td className="px-5 py-3 font-medium text-gray-800 dark:text-gray-100">{formatDate(c.startDate)}</td>
                         <td className="px-5 py-3 text-gray-500 dark:text-gray-400">{c.endDate ? formatDate(c.endDate) : '—'}</td>
@@ -90,8 +92,8 @@ const HistoryPage = () => {
               </div>
               {/* Mobile cards */}
               <div className="md:hidden flex flex-col divide-y divide-gray-100 dark:divide-gray-800">
-                {[...data.cycles].reverse().map((c) => (
-                  <div key={c.index} className="p-4 flex items-center justify-between">
+                {safeCycles.map((c) => (
+                  <div key={c.index || c._id || c.startDate} className="p-4 flex items-center justify-between">
                     <div>
                       <p className="font-semibold text-sm text-gray-800 dark:text-gray-100">{formatDate(c.startDate)}</p>
                       <p className="text-xs text-gray-400">{c.endDate ? `to ${formatDate(c.endDate)}` : 'No end date'}</p>

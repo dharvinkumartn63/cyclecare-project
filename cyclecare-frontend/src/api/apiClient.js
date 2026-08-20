@@ -33,7 +33,8 @@ apiClient.interceptors.response.use(
     if (error.response?.status === 401) {
       localStorage.removeItem('cc_token');
       localStorage.removeItem('cc_user');
-      if (window.location.pathname !== '/login' && window.location.pathname !== '/') {
+      const currentPath = window.location.pathname;
+      if (currentPath !== '/login' && currentPath !== '/register' && currentPath !== '/') {
         window.location.href = '/login';
       }
     }

@@ -83,9 +83,12 @@ const TrackerPage = () => {
     setLoading(true);
     try {
       const res = await periodApi.getPeriods();
-      setPeriods(res.data.data.periods);
-    } catch { toast.error('Failed to load periods.'); }
-    finally { setLoading(false); }
+      const rawData = res.data?.data?.periods ?? res.data?.data;
+      setPeriods(Array.isArray(rawData) ? rawData : []);
+    } catch {
+      toast.error('Failed to load periods.');
+      setPeriods([]);
+    } finally { setLoading(false); }
   }, []);
 
   useEffect(() => { fetchPeriods(); }, [fetchPeriods]);
@@ -119,6 +122,8 @@ const TrackerPage = () => {
     finally { setDeleting(false); }
   };
 
+  const safePeriods = Array.isArray(periods) ? periods : [];
+
   return (
     <AppLayout>
       <div className="flex flex-col gap-6 animate-slide-up">
@@ -133,7 +138,7 @@ const TrackerPage = () => {
         </div>
 
         {loading ? <PageLoader text="Loading period records..." /> :
-          periods.length === 0 ? (
+          safePeriods.length === 0 ? (
             <EmptyState
               icon={CalendarDays}
               title="Your cycle history is empty."
@@ -154,7 +159,7 @@ const TrackerPage = () => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
-                    {periods.map((p) => (
+                    {safePeriods.map((p) => (
                       <tr key={p._id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                         <td className="px-5 py-4 font-medium text-gray-800 dark:text-gray-100">{formatDate(p.startDate)}</td>
                         <td className="px-5 py-4 text-gray-500 dark:text-gray-400">{p.endDate ? formatDate(p.endDate) : <span className="text-amber-500 text-xs">Not set</span>}</td>
@@ -178,7 +183,7 @@ const TrackerPage = () => {
               </div>
               {/* Mobile cards */}
               <div className="md:hidden flex flex-col divide-y divide-gray-100 dark:divide-gray-800">
-                {periods.map((p) => (
+                {safePeriods.map((p) => (
                   <div key={p._id} className="p-4 flex items-start justify-between">
                     <div className="flex flex-col gap-1">
                       <p className="font-semibold text-gray-800 dark:text-gray-100 text-sm">{formatDate(p.startDate)}</p>

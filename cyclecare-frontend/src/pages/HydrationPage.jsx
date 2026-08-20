@@ -39,37 +39,23 @@ const HydrationPage = () => {
         hydrationApi.getTodayHydration(),
         hydrationApi.getHydrationHistory(),
       ]);
-      setHydration(hRes.data.data.hydration);
-      setHistory(histRes.data.data.history);
+      setHydration(hRes.data.data.hydration || hRes.data.data);
+      setHistory(histRes.data.data.history || histRes.data.data || []);
     } catch { toast.error('Failed to load hydration data.'); }
     finally { setLoading(false); }
   }, []);
 
   useEffect(() => { fetchHydration(); }, [fetchHydration]);
 
-  const setGlasses = async (count) => {
-    if (updating) return;
-    setUpdating(true);
-    try {
-      const newCount = count > hydration.completedGlasses ? count : hydration.completedGlasses - 1;
-      const safeCount = Math.max(0, Math.min(newCount, hydration.dailyGoal));
-      const res = await hydrationApi.updateHydration({ completedGlasses: safeCount });
-      setHydration(res.data.data.hydration);
-      if (safeCount === hydration.dailyGoal) toast.success('🎉 Daily hydration goal complete!');
-    } catch { toast.error('Failed to update hydration.'); }
-    finally { setUpdating(false); }
-  };
-
   const handleGlassClick = async (glassIndex) => {
     if (updating || !hydration) return;
     setUpdating(true);
-    // Toggle: if already filled, reduce to glassIndex-1; else set to glassIndex
     const newCount = hydration.completedGlasses >= glassIndex
       ? glassIndex - 1
       : glassIndex;
     try {
       const res = await hydrationApi.updateHydration({ completedGlasses: Math.max(0, newCount) });
-      setHydration(res.data.data.hydration);
+      setHydration(res.data.data.hydration || res.data.data);
       if (newCount >= hydration.dailyGoal) toast.success('🎉 Daily hydration goal complete!');
     } catch { toast.error('Failed to update hydration.'); }
     finally { setUpdating(false); }
@@ -79,7 +65,7 @@ const HydrationPage = () => {
     setUpdating(true);
     try {
       const res = await hydrationApi.resetHydration();
-      setHydration(res.data.data.hydration);
+      setHydration(res.data.data.hydration || res.data.data);
       toast.success("Today's hydration reset.");
     } catch { toast.error('Failed to reset.'); }
     finally { setUpdating(false); }
@@ -90,7 +76,7 @@ const HydrationPage = () => {
     if (!goal || goal < 1 || goal > 20) return;
     try {
       const res = await hydrationApi.updateHydration({ dailyGoal: goal, completedGlasses: Math.min(hydration.completedGlasses, goal) });
-      setHydration(res.data.data.hydration);
+      setHydration(res.data.data.hydration || res.data.data);
       toast.success('Daily goal updated.');
     } catch { toast.error('Failed to update goal.'); }
   };
@@ -167,23 +153,23 @@ const HydrationPage = () => {
           <div className={`p-3 rounded-xl text-sm font-medium text-center ${isComplete ? 'bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400' : 'bg-accent-50 dark:bg-accent-900/20 text-accent-700 dark:text-accent-400'}`}>
             {isComplete
               ? '🎉 Great job! Today\'s hydration goal is complete. Keep it up!'
-              : `💧 You've completed ${hydration?.completedGlasses} of ${hydration?.dailyGoal} glasses today. ${(hydration?.dailyGoal || 8) - (hydration?.completedGlasses || 0)} more to go!`
+              : `💧 You've completed ${hydration?.completedGlasses || 0} of ${hydration?.dailyGoal || 8} glasses today. ${(hydration?.dailyGoal || 8) - (hydration?.completedGlasses || 0)} more to go!`
             }
           </div>
         </div>
 
         {/* History */}
-        {history.length > 1 && (
+        {Array.isArray(history) && history.length > 0 && (
           <div className="card">
             <h3 className="section-title mb-4 flex items-center gap-2"><Trophy className="w-5 h-5 text-amber-500" /> Recent History</h3>
             <div className="flex flex-col divide-y divide-gray-100 dark:divide-gray-800">
-              {history.slice(0, 7).map((h) => {
-                const hp = Math.round((h.completedGlasses / h.dailyGoal) * 100);
+              {history.slice(0, 7).map((h, idx) => {
+                const hp = Math.round((h.completedGlasses / (h.dailyGoal || 8)) * 100);
                 return (
-                  <div key={h._id} className="py-3 flex items-center justify-between gap-4">
+                  <div key={h._id || h.date || idx} className="py-3 flex items-center justify-between gap-4">
                     <div>
-                      <p className="text-sm font-medium text-gray-700 dark:text-gray-200">{formatDate(h.date + 'T00:00:00', 'EEEE, MMM d')}</p>
-                      <p className="text-xs text-gray-400">{h.completedGlasses} / {h.dailyGoal} glasses</p>
+                      <p className="text-sm font-medium text-gray-700 dark:text-gray-200">{formatDate(h.date, 'EEEE, MMM d')}</p>
+                      <p className="text-xs text-gray-400">{h.completedGlasses} / {h.dailyGoal || 8} glasses</p>
                     </div>
                     <div className="flex items-center gap-3 flex-1 max-w-32">
                       <div className="flex-1 h-2 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">

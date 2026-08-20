@@ -99,7 +99,7 @@ const PredictionPage = () => {
               <div className="card">
                 <p className="text-muted text-xs mb-1">Recent Cycle Lengths</p>
                 <div className="flex flex-wrap gap-1.5 mt-1">
-                  {p.recentCycleLengths?.length > 0
+                  {Array.isArray(p?.recentCycleLengths) && p.recentCycleLengths.length > 0
                     ? p.recentCycleLengths.map((c, i) => <span key={i} className="badge-primary">{c}d</span>)
                     : <span className="text-sm text-gray-400">No data yet</span>
                   }

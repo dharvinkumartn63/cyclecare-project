@@ -20,17 +20,23 @@ const CustomTooltip = ({ active, payload, label }) => {
 };
 
 export const CycleChart = ({ data }) => {
-  if (!data || data.length < 2) return (
+  if (!Array.isArray(data) || data.length < 2) return (
     <div className="flex items-center justify-center h-48 text-muted text-sm">
       Add at least 2 period records to see your cycle chart.
     </div>
   );
 
   const chartData = data
-    .filter((c) => c.cycleLength)
+    .filter((c) => c && c.cycleLength)
     .map((c) => ({ name: `Cycle ${c.index}`, 'Cycle Length': c.cycleLength, month: c.month }));
 
-  const avg = Math.round(chartData.reduce((a, b) => a + b['Cycle Length'], 0) / chartData.length);
+  if (chartData.length === 0) return (
+    <div className="flex items-center justify-center h-48 text-muted text-sm">
+      Add at least 2 period records to see your cycle chart.
+    </div>
+  );
+
+  const avg = Math.round(chartData.reduce((a, b) => a + (b['Cycle Length'] || 0), 0) / chartData.length);
 
   return (
     <div className="w-full h-64">
@@ -55,7 +61,7 @@ export const CycleChart = ({ data }) => {
 };
 
 export const DurationChart = ({ data }) => {
-  if (!data || data.length === 0) return (
+  if (!Array.isArray(data) || data.length === 0) return (
     <div className="flex items-center justify-center h-48 text-muted text-sm">
       Add period records with end dates to see duration history.
     </div>

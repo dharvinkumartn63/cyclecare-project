@@ -45,14 +45,14 @@ const DashboardPage = () => {
   const fetchData = useCallback(async () => {
     setLoading(true);
     try {
-      const [predRes, cycleRes, hydRes] = await Promise.all([
+      const [predRes, cycleRes, hydRes] = await Promise.allSettled([
         predictionApi.getPrediction(),
         predictionApi.getCycleStats(),
         hydrationApi.getTodayHydration(),
       ]);
-      setPrediction(predRes.data.data.prediction);
-      setCycles(cycleRes.data.data);
-      setHydration(hydRes.data.data.hydration);
+      if (predRes.status === 'fulfilled') setPrediction(predRes.value?.data?.data?.prediction ?? null);
+      if (cycleRes.status === 'fulfilled') setCycles(cycleRes.value?.data?.data ?? null);
+      if (hydRes.status === 'fulfilled') setHydration(hydRes.value?.data?.data?.hydration || hydRes.value?.data?.data || null);
     } catch {
       // handled per-section
     } finally {
@@ -193,7 +193,7 @@ const DashboardPage = () => {
             <h3 className="section-title mb-3">💡 Cycle Insights</h3>
             <div className="flex flex-col gap-2">
               <p className="text-sm text-gray-600 dark:text-gray-300">{p.explanation}</p>
-              {p.recentCycleLengths?.length > 0 && (
+              {Array.isArray(p?.recentCycleLengths) && p.recentCycleLengths.length > 0 && (
                 <div className="flex gap-2 flex-wrap mt-1">
                   <span className="text-xs text-gray-500">Recent cycles:</span>
                   {p.recentCycleLengths.map((c, i) => (

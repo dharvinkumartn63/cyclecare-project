@@ -13,8 +13,19 @@ export const AuthProvider = ({ children }) => {
     const storedToken = localStorage.getItem('cc_token');
     const storedUser = localStorage.getItem('cc_user');
     if (storedToken && storedUser) {
-      setToken(storedToken);
-      setUser(JSON.parse(storedUser));
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        if (parsedUser && typeof parsedUser === 'object') {
+          setToken(storedToken);
+          setUser(parsedUser);
+        } else {
+          localStorage.removeItem('cc_token');
+          localStorage.removeItem('cc_user');
+        }
+      } catch (_) {
+        localStorage.removeItem('cc_token');
+        localStorage.removeItem('cc_user');
+      }
     }
     setLoading(false);
   }, []);

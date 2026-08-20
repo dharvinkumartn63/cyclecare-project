@@ -6,7 +6,16 @@ import { format, formatDistanceToNow, differenceInDays, parseISO } from 'date-fn
 export const formatDate = (date, fmt = 'MMM d, yyyy') => {
   if (!date) return '—';
   try {
-    return format(typeof date === 'string' ? parseISO(date) : date, fmt);
+    let parsed = date;
+    if (typeof date === 'string') {
+      // Clean up duplicate ISO formats if any
+      const cleaned = date.includes('T') && date.indexOf('T') !== date.lastIndexOf('T')
+        ? date.substring(0, date.lastIndexOf('T'))
+        : date;
+      parsed = parseISO(cleaned);
+    }
+    if (!parsed || isNaN(new Date(parsed).getTime())) return '—';
+    return format(parsed, fmt);
   } catch {
     return '—';
   }
@@ -15,7 +24,15 @@ export const formatDate = (date, fmt = 'MMM d, yyyy') => {
 export const formatRelative = (date) => {
   if (!date) return '—';
   try {
-    return formatDistanceToNow(typeof date === 'string' ? parseISO(date) : date, { addSuffix: true });
+    let parsed = date;
+    if (typeof date === 'string') {
+      const cleaned = date.includes('T') && date.indexOf('T') !== date.lastIndexOf('T')
+        ? date.substring(0, date.lastIndexOf('T'))
+        : date;
+      parsed = parseISO(cleaned);
+    }
+    if (!parsed || isNaN(new Date(parsed).getTime())) return '—';
+    return formatDistanceToNow(parsed, { addSuffix: true });
   } catch {
     return '—';
   }
@@ -24,8 +41,15 @@ export const formatRelative = (date) => {
 export const daysFromToday = (date) => {
   if (!date) return null;
   try {
-    const d = typeof date === 'string' ? parseISO(date) : date;
-    return differenceInDays(d, new Date());
+    let parsed = date;
+    if (typeof date === 'string') {
+      const cleaned = date.includes('T') && date.indexOf('T') !== date.lastIndexOf('T')
+        ? date.substring(0, date.lastIndexOf('T'))
+        : date;
+      parsed = parseISO(cleaned);
+    }
+    if (!parsed || isNaN(new Date(parsed).getTime())) return null;
+    return differenceInDays(parsed, new Date());
   } catch {
     return null;
   }
@@ -36,7 +60,7 @@ export const todayStr = () => {
 };
 
 export const getInitials = (name = '') => {
-  if (!name) return '?';
+  if (!name || typeof name !== 'string') return '?';
   return name
     .split(' ')
     .filter(Boolean)
