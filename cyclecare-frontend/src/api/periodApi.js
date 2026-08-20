@@ -1,6 +1,13 @@
 import { auth, db } from '../config/firebase';
 import { collection, query, where, getDocs, addDoc, updateDoc, deleteDoc, doc } from 'firebase/firestore';
 
+const withTimeout = (promise, ms = 1200) => {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error('Network timeout')), ms))
+  ]);
+};
+
 const getLocalPeriods = () => {
   try {
     return JSON.parse(localStorage.getItem('cc_periods')) || [
@@ -19,7 +26,7 @@ export const periodApi = {
     }
     try {
       const q = query(collection(db, 'periodRecords'), where('userId', '==', uid));
-      const snap = await getDocs(q);
+      const snap = await withTimeout(getDocs(q), 1200);
       const list = snap.docs.map((d) => ({ _id: d.id, ...d.data() }));
       return { data: { success: true, data: list.length ? list : getLocalPeriods() } };
     } catch (_) {
@@ -31,7 +38,7 @@ export const periodApi = {
     const uid = auth.currentUser?.uid || 'demo_user';
     const newRecord = { ...data, userId: uid, createdAt: new Date().toISOString() };
     try {
-      const docRef = await addDoc(collection(db, 'periodRecords'), newRecord);
+      const docRef = await withTimeout(addDoc(collection(db, 'periodRecords'), newRecord), 1500);
       const saved = { _id: docRef.id, ...newRecord };
       const current = getLocalPeriods();
       localStorage.setItem('cc_periods', JSON.stringify([saved, ...current]));
@@ -46,7 +53,7 @@ export const periodApi = {
 
   updatePeriod: async (id, data) => {
     try {
-      await updateDoc(doc(db, 'periodRecords', id), data);
+      await withTimeout(updateDoc(doc(db, 'periodRecords', id), data), 1500);
     } catch (_) {}
     const current = getLocalPeriods().map((p) => (p._id === id ? { ...p, ...data } : p));
     localStorage.setItem('cc_periods', JSON.stringify(current));
@@ -55,7 +62,7 @@ export const periodApi = {
 
   deletePeriod: async (id) => {
     try {
-      await deleteDoc(doc(db, 'periodRecords', id));
+      await withTimeout(deleteDoc(doc(db, 'periodRecords', id)), 1500);
     } catch (_) {}
     const current = getLocalPeriods().filter((p) => p._id !== id);
     localStorage.setItem('cc_periods', JSON.stringify(current));
