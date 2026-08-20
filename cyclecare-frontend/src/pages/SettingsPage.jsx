@@ -73,7 +73,7 @@ const SettingsPage = () => {
             <div>
               <p className="font-bold text-gray-900 dark:text-white text-base">Report an Issue or Feedback</p>
               <p className="text-xs text-gray-600 dark:text-gray-300">
-                Send issue reports directly to <span className="font-semibold text-primary-600 dark:text-primary-400">dharvin558@gmail.com</span> (Subject: <span className="font-semibold">carecycle issue</span>)
+                Send issue reports directly to <span className="font-semibold text-primary-600 dark:text-primary-400">dharvinkumar588@gmail.com</span> (Subject: <span className="font-semibold">carecycle issue</span>)
               </p>
             </div>
           </div>

@@ -43,7 +43,7 @@ export const userApi = {
   },
 
   submitFeedback: async (data) => {
-    const recipient = 'dharvin558@gmail.com';
+    const recipient = 'dharvinkumar588@gmail.com';
     const subject = 'carecycle issue';
     const body = `Issue Category: ${data.issueType || 'General Issue'}\nFrom User Email: ${data.email || 'N/A'}\n\nIssue Details:\n${data.message}`;
 

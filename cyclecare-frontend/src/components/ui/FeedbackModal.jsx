@@ -40,7 +40,7 @@ const FeedbackModal = ({ isOpen, onClose }) => {
         email: email || user?.email || 'N/A',
       });
       setSubmitted(true);
-      toast.success('Feedback submitted! Opening mail client to dharvin558@gmail.com');
+      toast.success('Feedback submitted! Opening mail client to dharvinkumar588@gmail.com');
     } catch (_) {
       toast.error('Failed to submit feedback.');
     } finally {
@@ -63,7 +63,7 @@ const FeedbackModal = ({ isOpen, onClose }) => {
           </div>
           <h3 className="text-xl font-bold text-gray-900 dark:text-white">Feedback Submitted!</h3>
           <p className="text-sm text-gray-600 dark:text-gray-300 max-w-sm">
-            Thank you for helping us improve CycleCare! Your report has been prepared for <span className="font-semibold text-primary-600 dark:text-primary-400">dharvin558@gmail.com</span> with subject <span className="font-bold">"carecycle issue"</span>.
+            Thank you for helping us improve CycleCare! Your report has been prepared for <span className="font-semibold text-primary-600 dark:text-primary-400">dharvinkumar588@gmail.com</span> with subject <span className="font-bold">"carecycle issue"</span>.
           </p>
           <Button onClick={handleReset} className="mt-2">
             Done
@@ -76,7 +76,7 @@ const FeedbackModal = ({ isOpen, onClose }) => {
             <Mail className="w-4 h-4 text-primary-500 flex-shrink-0" />
             <div>
               <p className="font-semibold">Direct Email Support:</p>
-              <p>Sent to <span className="font-bold">dharvin558@gmail.com</span> with subject <span className="font-bold">"carecycle issue"</span>.</p>
+              <p>Sent to <span className="font-bold">dharvinkumar588@gmail.com</span> with subject <span className="font-bold">"carecycle issue"</span>.</p>
             </div>
           </div>
 
