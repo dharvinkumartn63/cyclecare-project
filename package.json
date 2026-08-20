@@ -2,10 +2,10 @@
   "name": "dharvin",
   "version": "1.0.0",
   "description": "CycleCare Full-Stack Application",
-  "main": "index.js",
   "scripts": {
     "dev": "concurrently -k -p \"[{name}]\" -n \"BACKEND,FRONTEND\" -c \"magenta.bold,cyan.bold\" \"npm run dev:backend\" \"npm run dev:frontend\"",
     "start": "concurrently -k -p \"[{name}]\" -n \"BACKEND,FRONTEND\" -c \"magenta.bold,cyan.bold\" \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "build": "npm --prefix cyclecare-frontend run build",
     "dev:frontend": "npm --prefix cyclecare-frontend run dev",
     "dev:backend": "npm --prefix cyclecare-backend run dev",
     "seed": "npm --prefix cyclecare-backend run seed"

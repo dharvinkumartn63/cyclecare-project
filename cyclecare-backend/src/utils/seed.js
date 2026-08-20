@@ -26,14 +26,11 @@ const seed = async () => {
   }
 
   // Create demo user
-  const salt = await bcrypt.genSalt(12);
-  const passwordHash = await bcrypt.hash('Demo@1234', salt);
-
   const user = await User.create({
     name: 'Demo User',
     email: 'demo@cyclecare.app',
     userId: 'demo_user',
-    passwordHash,
+    passwordHash: 'Demo@1234',
     averageCycleLength: 28,
     averagePeriodDuration: 5,
     profileSetupComplete: true,
