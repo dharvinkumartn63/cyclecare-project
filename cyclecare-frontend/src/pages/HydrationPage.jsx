@@ -47,38 +47,45 @@ const HydrationPage = () => {
 
   useEffect(() => { fetchHydration(); }, [fetchHydration]);
 
-  const handleGlassClick = async (glassIndex) => {
-    if (updating || !hydration) return;
-    setUpdating(true);
-    const newCount = hydration.completedGlasses >= glassIndex
-      ? glassIndex - 1
-      : glassIndex;
-    try {
-      const res = await hydrationApi.updateHydration({ completedGlasses: Math.max(0, newCount) });
-      setHydration(res.data.data.hydration || res.data.data);
-      if (newCount >= hydration.dailyGoal) toast.success('🎉 Daily hydration goal complete!');
-    } catch { toast.error('Failed to update hydration.'); }
-    finally { setUpdating(false); }
+  const handleGlassClick = (glassIndex) => {
+    if (!hydration) return;
+    const newCount = Math.max(0, hydration.completedGlasses >= glassIndex ? glassIndex - 1 : glassIndex);
+    const updated = { ...hydration, completedGlasses: newCount };
+    
+    // Instant 0ms UI update
+    setHydration(updated);
+
+    if (newCount >= (hydration.dailyGoal || 8) && hydration.completedGlasses < (hydration.dailyGoal || 8)) {
+      toast.success('🎉 Daily hydration goal complete!');
+    }
+
+    // Async background sync
+    hydrationApi.updateHydration({ completedGlasses: newCount }).catch(() => {});
   };
 
-  const handleReset = async () => {
-    setUpdating(true);
-    try {
-      const res = await hydrationApi.resetHydration();
-      setHydration(res.data.data.hydration || res.data.data);
-      toast.success("Today's hydration reset.");
-    } catch { toast.error('Failed to reset.'); }
-    finally { setUpdating(false); }
+  const handleReset = () => {
+    if (!hydration) return;
+    const updated = { ...hydration, completedGlasses: 0 };
+    
+    // Instant 0ms UI update
+    setHydration(updated);
+    toast.success("Today's hydration reset.");
+
+    // Async background sync
+    hydrationApi.resetHydration().catch(() => {});
   };
 
-  const handleGoalChange = async (e) => {
+  const handleGoalChange = (e) => {
     const goal = parseInt(e.target.value, 10);
-    if (!goal || goal < 1 || goal > 20) return;
-    try {
-      const res = await hydrationApi.updateHydration({ dailyGoal: goal, completedGlasses: Math.min(hydration.completedGlasses, goal) });
-      setHydration(res.data.data.hydration || res.data.data);
-      toast.success('Daily goal updated.');
-    } catch { toast.error('Failed to update goal.'); }
+    if (!goal || goal < 1 || goal > 20 || !hydration) return;
+    const updated = { ...hydration, dailyGoal: goal, completedGlasses: Math.min(hydration.completedGlasses, goal) };
+    
+    // Instant 0ms UI update
+    setHydration(updated);
+    toast.success('Daily goal updated.');
+
+    // Async background sync
+    hydrationApi.updateHydration({ dailyGoal: goal, completedGlasses: updated.completedGlasses }).catch(() => {});
   };
 
   if (loading) return <AppLayout><PageLoader text="Loading hydration data..." /></AppLayout>;

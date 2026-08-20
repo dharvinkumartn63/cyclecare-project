@@ -28,11 +28,15 @@ export const hydrationApi = {
   updateHydration: async (data) => {
     const today = getTodayKey();
     const uid = auth.currentUser?.uid || 'demo_user';
-    const payload = { ...data, date: today, userId: uid };
-    try {
-      await withTimeout(setDoc(doc(db, 'hydrationRecords', `${uid}_${today}`), payload, { merge: true }), 1500);
-    } catch (_) {}
+    const stored = JSON.parse(localStorage.getItem(`cc_hydration_${today}`)) || { date: today, completedGlasses: 3, dailyGoal: 8 };
+    const payload = { ...stored, ...data, date: today, userId: uid };
+
+    // 1. Instant local persistence (0ms)
     localStorage.setItem(`cc_hydration_${today}`, JSON.stringify(payload));
+
+    // 2. Async background sync to Firestore
+    setDoc(doc(db, 'hydrationRecords', `${uid}_${today}`), payload, { merge: true }).catch(() => {});
+
     return { data: { success: true, data: payload } };
   },
 
